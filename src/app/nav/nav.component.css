@@ -1,0 +1,16 @@
+.dropdownToggle,.dropdown-item{
+    cursor: pointer;
+}
+.btn-success.disabled{
+    width: 124px;
+    /* margin-right: 70px; */
+}
+
+img {
+    max-height: 50px;
+    border: 2px solid white;
+    display: inline;
+}
+
+ 
+
