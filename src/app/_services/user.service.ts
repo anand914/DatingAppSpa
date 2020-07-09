@@ -14,31 +14,59 @@ export class UserService {
   baseUrl = environment .apiUrl;
   constructor(private http: HttpClient) { }
 
-  getUsers(page?, itemsPerPage?, userParams?): Observable<PaginationResult<User[]>> {
-    const paginationResult: PaginationResult<User[]> =  new PaginationResult<User[]>();
+  // getUsers(page?, itemsPerPage?, userParams?): Observable<PaginationResult<User[]>> {
+  //   const paginationResult: PaginationResult<User[]> =  new PaginationResult<User[]>();
+  //   let params = new HttpParams();
+
+  //   // tslint:disable-next-line: no-conditional-assignment
+  //   if (page != null && itemsPerPage != null) {
+  //     params = params.append('pagenumber', page);
+  //     params = params.append('pagesize', itemsPerPage);
+  //   }
+  //    // tslint:disable-next-line: align
+  //    if (userParams != null) {
+  //       params = params.append('minAge', userParams.MinAge);
+  //       params = params.append('maxAge', userParams.MaxAge);
+  //       params = params.append('gender', userParams.Gender);
+  //    }
+  //   return this.http.get<User[]>(this.baseUrl + 'User/GetAllUser', {observe: 'response', params})
+  //   .pipe(
+  //     map(response => {
+  //       paginationResult.result = response.body;
+  //       if (response.headers.get('Pagination') != null) {
+  //         paginationResult.Pagination = JSON.parse(response.headers.get('Pagination'));
+  //       }
+  //       return paginationResult;
+  //     })
+  //   );
+  // }
+  getUsers(page?, itemsPerPage?, userParams?, likesParam?): Observable<PaginationResult<User[]>> {
+    const paginationResult: PaginationResult<User[]> = new PaginationResult<User[]>();
+
     let params = new HttpParams();
 
-    // tslint:disable-next-line: no-conditional-assignment
     if (page != null && itemsPerPage != null) {
-      params = params.append('pagenumber', page);
-      params = params.append('pagesize', itemsPerPage);
+      params = params.append('pageNumber', page);
+      params = params.append('pageSize', itemsPerPage);
     }
-     // tslint:disable-next-line: align
-     if (userParams != null) {
-        params = params.append('minAge', userParams.MinAge);
-        params = params.append('maxAge', userParams.MaxAge);
-        params = params.append('gender', userParams.Gender);
-     }
-    return this.http.get<User[]>(this.baseUrl + 'User/GetAllUser', {observe: 'response', params})
-    .pipe(
-      map(response => {
-        paginationResult.result = response.body;
-        if (response.headers.get('Pagination') != null) {
-          paginationResult.Pagination = JSON.parse(response.headers.get('Pagination'));
-        }
-        return paginationResult;
-      })
-    );
+
+    if (userParams != null) {
+      params = params.append('minAge', userParams.minAge);
+      params = params.append('maxAge', userParams.maxAge);
+      params = params.append('gender', userParams.gender);
+      params = params.append('orderBy', userParams.orderBy);
+    }
+
+    return this.http.get<User[]>(this.baseUrl + 'User/GetAllUser', { observe: 'response', params})
+      .pipe(
+        map(response => {
+          paginationResult.result = response.body;
+          if (response.headers.get('Pagination') != null) {
+            paginationResult.Pagination = JSON.parse(response.headers.get('Pagination'));
+          }
+          return paginationResult;
+        })
+      );
   }
   getUser(id: number): Observable<User> {
      return this.http.get<User>(this.baseUrl + 'User/GetUserByID/' + id);
